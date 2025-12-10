@@ -1,14 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-// 로직에 대한부분을 service에 작성한다.
-
 export interface Movie {
   id: number;
   title: string;
 }
 
 @Injectable()
-export class AppService {
+export class MovieService {
   private movies: Movie[] = [
     {
       id: 1,
