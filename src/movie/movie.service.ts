@@ -1,28 +1,28 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
-
-export interface Movie {
-  id: number;
-  title: string;
-  genre: string;
-}
+import { Movie } from './entity/movie.emtity';
 
 @Injectable()
 export class MovieService {
-  private movies: Movie[] = [
-    {
-      id: 1,
-      title: '해리포터',
-      genre: '판타지',
-    },
-    {
-      id: 2,
-      title: '반지의제왕',
-      genre: '판타지',
-    },
-  ];
+  private movies: Movie[] = [];
   private idCounter = 3;
+
+  constructor() {
+    const movie1 = new Movie();
+
+    movie1.id = 1;
+    movie1.title = '해리포터';
+    movie1.genre = 'fantasy';
+
+    const movie2 = new Movie();
+
+    movie2.id = 2;
+    movie2.title = '반지의제왕';
+    movie2.genre = 'action';
+
+    this.movies.push(movie1, movie2);
+  }
 
   getManyMovies(title?: string) {
     if (!title) {
