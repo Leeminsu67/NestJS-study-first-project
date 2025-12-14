@@ -7,8 +7,20 @@ import {
   VersionColumn,
 } from 'typeorm';
 
+export class BaseEntity {
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @VersionColumn()
+  version: number;
+}
+
+// Ingeritance 방식
 @Entity()
-export class Movie {
+export class Movie extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -18,12 +30,7 @@ export class Movie {
   @Column()
   genre: string;
 
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @VersionColumn()
-  version: number;
+  // Embedding 방식
+  // @Column(() => BaseEntity)
+  // base: BaseEntity;
 }
