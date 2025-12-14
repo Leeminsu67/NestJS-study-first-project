@@ -2,11 +2,13 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { BaseTable } from './base-table.entity';
+import { BaseTable } from '../../common/entity/base-table.entity';
 import { MovieDetail } from './movie-detail.entity';
+import { Director } from 'src/director/entitie/director.entity';
 
 // ManyTo One Director 감독을 여러개의 영화를 만들 수 있음
 // OneToOne MovieDetail 영화의 상세정보는 하나의 상세정보만 가질 수 있음
@@ -29,6 +31,9 @@ export class Movie extends BaseTable {
   })
   @JoinColumn()
   detail: MovieDetail;
+
+  @ManyToOne(() => Director, (director) => director.id)
+  director: Director;
 
   // Embedding 방식
   // @Column(() => BaseTable)
