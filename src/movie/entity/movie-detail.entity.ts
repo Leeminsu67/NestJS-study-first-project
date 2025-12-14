@@ -10,6 +10,6 @@ export class MovieDetail {
   detail: string;
 
   // Relation
-  @OneToOne(() => Movie)
+  @OneToOne(() => Movie, (movie) => movie.id)
   movie: Movie;
 }
