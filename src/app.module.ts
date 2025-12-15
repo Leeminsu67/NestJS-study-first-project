@@ -7,6 +7,7 @@ import { Movie } from './movie/entity/movie.emtity';
 import { MovieDetail } from './movie/entity/movie-detail.entity';
 import { DirectorModule } from './director/director.module';
 import { Director } from './director/entitie/director.entity';
+import { GenreModule } from './genre/genre.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { Director } from './director/entitie/director.entity';
     }),
     MovieModule,
     DirectorModule,
+    GenreModule,
   ],
 })
 export class AppModule {}
