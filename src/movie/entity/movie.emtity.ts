@@ -2,6 +2,8 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -9,6 +11,7 @@ import {
 import { BaseTable } from '../../common/entity/base-table.entity';
 import { MovieDetail } from './movie-detail.entity';
 import { Director } from 'src/director/entitie/director.entity';
+import { Genre } from 'src/genre/entities/genre.entity';
 
 // ManyTo One Director 감독을 여러개의 영화를 만들 수 있음
 // OneToOne MovieDetail 영화의 상세정보는 하나의 상세정보만 가질 수 있음
@@ -23,8 +26,9 @@ export class Movie extends BaseTable {
   @Column({ unique: true })
   title: string;
 
-  @Column()
-  genre: string;
+  @ManyToMany(() => Genre, (genre) => genre.movies)
+  @JoinTable()
+  genres: Genre[];
 
   @OneToOne(() => MovieDetail, (movieDetail) => movieDetail.id, {
     cascade: true,

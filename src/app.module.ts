@@ -8,6 +8,7 @@ import { MovieDetail } from './movie/entity/movie-detail.entity';
 import { DirectorModule } from './director/director.module';
 import { Director } from './director/entitie/director.entity';
 import { GenreModule } from './genre/genre.module';
+import { Genre } from './genre/entities/genre.entity';
 
 @Module({
   imports: [
@@ -32,7 +33,7 @@ import { GenreModule } from './genre/genre.module';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
-        entities: [Movie, MovieDetail, Director],
+        entities: [Movie, MovieDetail, Director, Genre],
         // 개발에서만 틀어놓고 실제 운영 환경에서는 끈다
         synchronize: true,
       }),
