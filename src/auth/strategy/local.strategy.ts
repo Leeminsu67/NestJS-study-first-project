@@ -8,7 +8,7 @@ export class LocalAuthGuard extends AuthGuard('mingdev') {}
 @Injectable()
 // Strategy 뒤에 문자열을 주면 해당 값으로 가드안에서 불러올 수 있다
 export class LocalStrategy extends PassportStrategy(Strategy, 'mingdev') {
-  constructor(private readonly auService: AuthService) {
+  constructor(private readonly authService: AuthService) {
     // 원래 username이라고 아이디를 보내야하는데 키값을 변경할 수 있는 기능
     super({
       usernameField: 'email',
@@ -23,7 +23,7 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'mingdev') {
    * return -> Request();
    */
   async validate(email: string, password: string) {
-    const user = await this.auService.authenticate(email, password);
+    const user = await this.authService.authenticate(email, password);
 
     return user;
   }
