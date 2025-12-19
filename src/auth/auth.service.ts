@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { envVariableKeys } from 'src/common/const/env.const';
 
 @Injectable()
 export class AuthService {
@@ -63,7 +64,9 @@ export class AuthService {
     }
 
     const payload = await this.jwtService.verifyAsync(token, {
-      secret: this.configService.getOrThrow<string>('ACCESS_TOKEN_SECRET'),
+      secret: this.configService.getOrThrow<string>(
+        envVariableKeys.accessTokenSecret,
+      ),
     });
 
     if (isRefreshToken) {
@@ -92,7 +95,7 @@ export class AuthService {
     const hash = await bcrypt.hash(
       password,
       // this.configService.getOrThrow<number>('HASH_ROUNDS'),
-      this.configService.get<number>('HASH_ROUNDS')!,
+      this.configService.get<number>(envVariableKeys.hashRounds)!,
     );
 
     await this.userRepository.save({
@@ -123,10 +126,10 @@ export class AuthService {
   async issueToken(user: { id: number; role: Role }, isRefreshToken: boolean) {
     // JWT 토큰 환경변수 값 가져오기
     const refreshTokenSecret = this.configService.get<string>(
-      'REFRESH_TOKEN_SECRET',
+      envVariableKeys.refreshTokenSecret,
     );
     const accessTokenSecret = this.configService.get<string>(
-      'ACCESS_TOKEN_SECRET',
+      envVariableKeys.accessTokenSecret,
     );
 
     return this.jwtService.signAsync(
