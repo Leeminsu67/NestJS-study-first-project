@@ -52,6 +52,11 @@ export class BearerTokenMiddleware implements NestMiddleware {
       req.user = payload;
       next();
     } catch (e) {
+      // 토큰 만료
+      if (e.name === 'TokenExpiredError') {
+        throw new UnauthorizedException('토큰이 만료됐습니다');
+      }
+
       // throw new UnauthorizedException('토큰이 만료되었습니다');
       // 이렇게 next로 보내면 request.user는 undefined가 되어버린다
       // user가 없다면 guard에서 예외처리로 막아주기 때문에 next()로 보내버린다
