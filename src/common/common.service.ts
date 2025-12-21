@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ObjectLiteral, SelectQueryBuilder } from 'typeorm';
-import { PagePaginationDto } from './dot/page-pagination.dto';
+import { PagePaginationDto } from './dto/page-pagination.dto';
 
 @Injectable()
 export class CommonService {
