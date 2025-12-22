@@ -50,10 +50,17 @@ export class MovieService {
     // }
 
     // cursor pagination
-    this.commonService.applyCursorPaginationParamsToQb(qb, dto);
-    qb.take(take);
+    const { nextCursor } =
+      await this.commonService.applyCursorPaginationParamsToQb(qb, dto);
 
-    return qb.getManyAndCount();
+    // 배열 형식이라서 대괄호로 해야한다
+    const [data, count] = await qb.getManyAndCount();
+
+    return {
+      data,
+      nextCursor,
+      count,
+    };
   }
 
   async findOne(id: number) {
