@@ -96,3 +96,33 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+---
+
+## 프로젝트 요약 ✅
+
+**기술 스택**: NestJS (v11), TypeScript, TypeORM, PostgreSQL, Passport (JWT / Local)
+
+**테스트 & 툴링**: Jest (unit/e2e), ESLint, Prettier
+
+**핵심 구조**:
+
+- `src/auth/`: 인증( `jwt.strategy.ts`, `local.strategy.ts` ), 미들웨어 및 RBAC(데코레이터 · 가드)
+- `src/user/`: 유저 엔티티 및 CRUD 로직 (`entities/user.entity.ts`)
+- `src/movie/`: 영화 도메인(컨트롤러 · 서비스 · 엔티티), `pipe/movie-title-validation.pipe.ts`
+- `src/director/`, `src/genre/`: 도메인별 컨트롤러/서비스/DTO/엔티티
+- `src/common/`: 공통 인터셉터/필터/서비스(트랜잭션, 캐시, 응답 시간 등)
+
+**실행 방법**:
+
+- 개발: `pnpm run start:dev`
+- 빌드: `pnpm run build`
+- 테스트: `pnpm run test` / e2e: `pnpm run test:e2e`
+
+**참고 파일 위치**:
+
+- 인증 흐름: `src/auth/`
+- 엔티티: 각 모듈의 `entities/` 또는 `entitie/` 폴더
+- e2e 테스트: `test/` (`app.e2e-spec.ts`)
+
+원하시면 특정 모듈(예: `auth` 또는 `movie`)을 더 상세 분석하거나 개선/리팩터링 제안을 README에 추가해 드리겠습니다. ✨
