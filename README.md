@@ -124,5 +124,3 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 - 인증 흐름: `src/auth/`
 - 엔티티: 각 모듈의 `entities/` 또는 `entitie/` 폴더
 - e2e 테스트: `test/` (`app.e2e-spec.ts`)
-
-원하시면 특정 모듈(예: `auth` 또는 `movie`)을 더 상세 분석하거나 개선/리팩터링 제안을 README에 추가해 드리겠습니다. ✨
