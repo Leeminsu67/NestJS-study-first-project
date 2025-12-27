@@ -66,35 +66,8 @@ export class MovieController {
   @Post()
   @RBAC(Role.admin)
   @UseInterceptors(TransactionInterceptor)
-  @UseInterceptors(
-    FileInterceptor('movie', {
-      limits: {
-        fileSize: 20000000,
-      },
-      fileFilter(req, file, callback) {
-        // 조건을 걸 수 있다
-        console.log(file);
-        // callback 두번째에 false를 넣으면 원하는 폴더에 파일이 들어가지 않는다
-        if (file.mimetype !== 'video/mp4') {
-          return callback(
-            new BadRequestException('MP4 타입만 업로드 가능합니다!'),
-            false,
-          );
-        }
-
-        return callback(null, true);
-      },
-    }),
-  )
-  postMovie(
-    @Body() body: CreateMovieDto,
-    @Request() req,
-    // Pipe로 로직 넣기
-    // @UploadedFile(new MovieFilePipe({ maxSize: 20, mimetype: `video/mp4` }))
-    @UploadedFile()
-    movie: Express.Multer.File,
-  ) {
-    return this.movieService.create(body, movie.filename, req.queryRunner);
+  postMovie(@Body() body: CreateMovieDto, @Request() req) {
+    return this.movieService.create(body, req.queryRunner);
   }
 
   @Patch(':id')
