@@ -72,6 +72,7 @@ export class MovieService {
       .leftJoinAndSelect('movie.director', 'director')
       .leftJoinAndSelect('movie.genres', 'genre')
       .leftJoinAndSelect('movie.detail', 'detail')
+      .leftJoinAndSelect('movie.creator', 'creator')
       .where('movie.id = :id', { id })
       .getOne();
 
@@ -86,7 +87,11 @@ export class MovieService {
     return movie;
   }
 
-  async create(createMovieDto: CreateMovieDto, qr: QueryRunner) {
+  async create(
+    createMovieDto: CreateMovieDto,
+    userId: number,
+    qr: QueryRunner,
+  ) {
     // const qr = this.dataSource.createQueryRunner();
     // await qr.connect();
     // await qr.startTransaction();
@@ -131,12 +136,6 @@ export class MovieService {
     const movieFolder = join(`public`, `movie`);
     const tempFolder = join(`public`, `temp`);
 
-    // 영상 옮기기
-    await rename(
-      join(process.cwd(), tempFolder, createMovieDto.movieFileName),
-      join(process.cwd(), movieFolder, createMovieDto.movieFileName),
-    );
-
     const movie = await qr.manager
       .createQueryBuilder()
       .insert()
@@ -145,6 +144,7 @@ export class MovieService {
         title: createMovieDto.title,
         detail: { id: movieDetailId },
         director,
+        creator: { id: userId },
         movieFilePath: join(movieFolder, createMovieDto.movieFileName),
         // genres,
       })
@@ -167,6 +167,13 @@ export class MovieService {
 
     // await qr.commitTransaction();
     // return await this.movieRepository.findOne({
+
+    // 영상 옮기기
+    await rename(
+      join(process.cwd(), tempFolder, createMovieDto.movieFileName),
+      join(process.cwd(), movieFolder, createMovieDto.movieFileName),
+    );
+
     return await qr.manager.findOne(Movie, {
       where: { id: movieId },
       relations: ['detail', 'director', 'genres'],
