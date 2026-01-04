@@ -10,10 +10,6 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   ParseIntPipe,
-  Request,
-  UploadedFile,
-  UploadedFiles,
-  BadRequestException,
 } from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
@@ -23,14 +19,14 @@ import { Public } from 'src/auth/decorator/public.decorator';
 import { RBAC } from 'src/auth/decorator/rbac.decorator';
 import { Role } from 'src/user/entities/user.entity';
 import { GetMoviesDto } from './dto/get-movies.dto';
-import { CacheInterceptor } from 'src/common/interceptor/cache.interceptor';
+// import { CacheInterceptor } from 'src/common/interceptor/cache.interceptor';
 import { TransactionInterceptor } from 'src/common/interceptor/transaction.interceptor';
-import {
-  FileFieldsInterceptor,
-  FileInterceptor,
-  FilesInterceptor,
-} from '@nestjs/platform-express';
-import { MovieFilePipe } from './pipe/movie-file.pipe';
+// import {
+//   FileFieldsInterceptor,
+//   FileInterceptor,
+//   FilesInterceptor,
+// } from '@nestjs/platform-express';
+// import { MovieFilePipe } from './pipe/movie-file.pipe';
 import { UserId } from 'src/user/decorator/user-id.decorator';
 import { QueryRunner } from 'src/common/decorator/query-runner.decorator';
 import type { QueryRunner as QR } from 'typeorm';
@@ -92,4 +88,29 @@ export class MovieController {
   deleteMovie(@Param('id', ParseIntPipe) id: number) {
     return this.movieService.remove(id);
   }
+
+  /**
+   * [Like] [DisLike]
+   *
+   * 아무것도 누르지 않은 상태
+   * Like & Dislike 모두 버튼 꺼져있음
+   *
+   * Like 버튼 누르면
+   * Like 버튼 불 켜짐
+   *
+   * Like 버튼 다시 누르면
+   * Like 버튼 불 꺼짐
+   *
+   * Dislike 버튼 누르면
+   * Dislike 버튼 불 켜짐
+   *
+   * Dislike 버튼 다시 누르면
+   * Dislike 버튼 불 꺼짐
+   *
+   * Like 버튼 누름
+   * Like 버튼 불 켜짐
+   *
+   * Dislike 버튼 누름
+   * Like 버튼 불 꺼지고 Dislike 버튼 불 켜짐
+   */
 }

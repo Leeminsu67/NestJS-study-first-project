@@ -7,6 +7,7 @@ import { MovieDetail } from './entity/movie-detail.entity';
 import { Director } from 'src/director/entitie/director.entity';
 import { Genre } from 'src/genre/entities/genre.entity';
 import { CommonModule } from 'src/common/common.module';
+import { MovieUserLike } from './entity/movie-user-like.entity';
 // import { MulterModule } from '@nestjs/platform-express';
 // import { diskStorage } from 'multer';
 // import { join } from 'path';
