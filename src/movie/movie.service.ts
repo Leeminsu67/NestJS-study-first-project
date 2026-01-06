@@ -40,7 +40,7 @@ export class MovieService {
     private readonly commonService: CommonService,
   ) {}
 
-  async findAll(dto: GetMoviesDto) {
+  async findAll(dto: GetMoviesDto, userId?: number) {
     // const { title, take, page } = dto;
     const { title, take } = dto;
 
@@ -48,7 +48,6 @@ export class MovieService {
       .createQueryBuilder('movie')
       .leftJoinAndSelect('movie.director', 'director')
       .leftJoinAndSelect('movie.genres', 'genre');
-
     if (title) {
       // 따로 부르지 않고 쿼리 빌더에 더 붙일수가 있다
       qb.where('movie.title LIKE :title', { title: `%${title}%` });
@@ -64,7 +63,39 @@ export class MovieService {
       await this.commonService.applyCursorPaginationParamsToQb(qb, dto);
 
     // 배열 형식이라서 대괄호로 해야한다
-    const [data, count] = await qb.getManyAndCount();
+    let [data, count] = await qb.getManyAndCount();
+
+    if (userId) {
+      const movieIds = data.map((movie) => movie.id);
+
+      console.log(1);
+      const likeMovies = await this.movieUserLikeRepository
+        .createQueryBuilder('mul')
+        .leftJoinAndSelect('mul.user', 'user')
+        .leftJoinAndSelect('mul.movie', 'movie')
+        .where('movie.id IN(:...movieIds)', { movieIds })
+        .andWhere('user.id = :userId', { userId })
+        .getMany();
+      console.log(2);
+
+      /**
+       * {
+       *  movieId: boolean
+       * }
+       */
+      const likeMovieMap = likeMovies.reduce(
+        (acc, next) => ({
+          ...acc,
+          [next.movie.id]: next.isLike,
+        }),
+        {},
+      );
+
+      data = data.map((x) => ({
+        ...x,
+        likeStatus: x.id in likeMovieMap ? likeMovieMap[x.id] : null,
+      }));
+    }
 
     return {
       data,
