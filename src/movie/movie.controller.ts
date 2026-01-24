@@ -30,6 +30,11 @@ import { TransactionInterceptor } from 'src/common/interceptor/transaction.inter
 import { UserId } from 'src/user/decorator/user-id.decorator';
 import { QueryRunner } from 'src/common/decorator/query-runner.decorator';
 import type { QueryRunner as QR } from 'typeorm';
+import {
+  CacheKey,
+  CacheTTL,
+  CacheInterceptor as CI,
+} from '@nestjs/cache-manager';
 
 @Controller('movie')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -41,6 +46,16 @@ export class MovieController {
   // @UseInterceptors(CacheInterceptor)
   getMovies(@Query() dto: GetMoviesDto, @UserId() userId?: number) {
     return this.movieService.findAll(dto, userId);
+  }
+
+  // /movie/recent
+  @Get('recent')
+  // url로 접근하는 캐시 적용 방법
+  @UseInterceptors(CI)
+  @CacheKey('getMoviesRecent')
+  @CacheTTL(1000)
+  getMoviesRecent() {
+    return this.movieService.findRecent();
   }
 
   @Public()

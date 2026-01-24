@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -19,6 +20,7 @@ import { join } from 'path';
 import { rename } from 'fs/promises';
 import { User } from 'src/user/entities/user.entity';
 import { MovieUserLike } from './entity/movie-user-like.entity';
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class MovieService {
@@ -38,7 +40,28 @@ export class MovieService {
     private readonly movieUserLikeRepository: Repository<MovieUserLike>,
     private readonly dataSource: DataSource,
     private readonly commonService: CommonService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache, // nestjs cache manager인걸 확인
   ) {}
+
+  // cache 적용 find 함수
+  async findRecent() {
+    const cacheData = await this.cacheManager.get('MOVIE_RECENT');
+
+    if (cacheData) {
+      return cacheData;
+    }
+
+    const data = await this.movieRepository.find({
+      order: {
+        createdAt: 'DESC',
+      },
+      take: 10,
+    });
+
+    await this.cacheManager.set('MOVIE_RECENT', data);
+
+    return data;
+  }
 
   async findAll(dto: GetMoviesDto, userId?: number) {
     // const { title, take, page } = dto;
@@ -68,15 +91,16 @@ export class MovieService {
     if (userId) {
       const movieIds = data.map((movie) => movie.id);
 
-      console.log(1);
-      const likeMovies = await this.movieUserLikeRepository
-        .createQueryBuilder('mul')
-        .leftJoinAndSelect('mul.user', 'user')
-        .leftJoinAndSelect('mul.movie', 'movie')
-        .where('movie.id IN(:...movieIds)', { movieIds })
-        .andWhere('user.id = :userId', { userId })
-        .getMany();
-      console.log(2);
+      const likeMovies =
+        movieIds.length < 1
+          ? []
+          : await this.movieUserLikeRepository
+              .createQueryBuilder('mul')
+              .leftJoinAndSelect('mul.user', 'user')
+              .leftJoinAndSelect('mul.movie', 'movie')
+              .where('movie.id IN(:...movieIds)', { movieIds })
+              .andWhere('user.id = :userId', { userId })
+              .getMany();
 
       /**
        * {
