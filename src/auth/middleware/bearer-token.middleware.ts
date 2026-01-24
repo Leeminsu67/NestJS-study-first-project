@@ -31,28 +31,31 @@ export class BearerTokenMiddleware implements NestMiddleware {
       return;
     }
 
+    // authHeader가 존재하는 경우
+    const token = this.validateBearerToken(authHeader);
+
+    const blockedToken = await this.cacheManager.get(`BLOCK_TOKEN_${token}`);
+
+    if (blockedToken) {
+      throw new UnauthorizedException('차단된 토큰입니다');
+    }
+
+    const tokenKey = `TOKEN_${token}`;
+
+    const cachePayload = await this.cacheManager.get(tokenKey);
+
+    if (cachePayload) {
+      req.user = cachePayload;
+      return next();
+    }
+
+    const decodedPayload = this.jwtService.decode(token);
+
+    if (decodedPayload.type !== 'refresh' && decodedPayload.type !== 'access') {
+      throw new UnauthorizedException('잘못된 토큰입니다');
+    }
+
     try {
-      // authHeader가 존재하는 경우
-      const token = this.validateBearerToken(authHeader);
-
-      const tokenKey = `TOKEN_${token}`;
-
-      const cachePayload = await this.cacheManager.get(tokenKey);
-
-      if (cachePayload) {
-        req.user = cachePayload;
-        return next();
-      }
-
-      const decodedPayload = this.jwtService.decode(token);
-
-      if (
-        decodedPayload.type !== 'refresh' &&
-        decodedPayload.type !== 'access'
-      ) {
-        throw new UnauthorizedException('잘못된 토큰입니다');
-      }
-
       const secretKey =
         decodedPayload.type === 'refresh'
           ? envVariableKeys.refreshTokenSecret
