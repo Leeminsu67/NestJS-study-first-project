@@ -1,126 +1,202 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Netflix Clone Backend API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+NestJS 기반의 Netflix 클론 백엔드 API 프로젝트입니다.  
+영화, 감독, 장르, 사용자 관리 및 인증 기능을 제공합니다.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 기술 스택
 
-## Description
+| 분류 | 기술 |
+|------|------|
+| Framework | NestJS v11, TypeScript |
+| Database | PostgreSQL, TypeORM |
+| 인증 | Passport (JWT, Local Strategy), bcrypt |
+| 캐싱 | @nestjs/cache-manager |
+| 로깅 | Winston (nest-winston) |
+| API 문서 | Swagger (@nestjs/swagger) |
+| 유효성 검사 | class-validator, class-transformer, Joi |
+| 스케줄링 | @nestjs/schedule |
+| 테스트 | Jest, Supertest |
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 프로젝트 구조
 
-## Project setup
-
-```bash
-$ pnpm install
+```
+src/
+├── main.ts                    # 애플리케이션 진입점 (Swagger 설정 포함)
+├── app.module.ts              # 루트 모듈 (전역 설정, 미들웨어, 가드, 인터셉터)
+│
+├── auth/                      # 인증 모듈
+│   ├── auth.controller.ts     # 로그인, 회원가입, 토큰 관리 API
+│   ├── auth.service.ts        # 인증 로직 (토큰 발급, 검증)
+│   ├── decorator/             # @Public, @RBAC 커스텀 데코레이터
+│   ├── guard/                 # AuthGuard, RBACGuard
+│   ├── middleware/            # BearerTokenMiddleware
+│   └── strategy/              # JWT, Local Passport 전략
+│
+├── user/                      # 사용자 모듈
+│   ├── user.controller.ts     # 사용자 CRUD API
+│   ├── user.service.ts        # 사용자 비즈니스 로직
+│   ├── dto/                   # CreateUserDto, UpdateUserDto
+│   ├── entities/              # User 엔티티 (Role enum 포함)
+│   └── decorator/             # @UserId 커스텀 데코레이터
+│
+├── movie/                     # 영화 모듈
+│   ├── movie.controller.ts    # 영화 CRUD, 좋아요/싫어요 API
+│   ├── movie.service.ts       # 영화 비즈니스 로직
+│   ├── dto/                   # CreateMovieDto, UpdateMovieDto, GetMoviesDto
+│   ├── entity/                # Movie, MovieDetail, MovieUserLike 엔티티
+│   └── pipe/                  # MovieTitleValidationPipe, MovieFilePipe
+│
+├── director/                  # 감독 모듈
+│   ├── director.controller.ts # 감독 CRUD API
+│   ├── director.service.ts    # 감독 비즈니스 로직
+│   ├── dto/                   # CreateDirectorDto, UpdateDirectorDto
+│   └── entitie/               # Director 엔티티
+│
+├── genre/                     # 장르 모듈
+│   ├── genre.controller.ts    # 장르 CRUD API
+│   ├── genre.service.ts       # 장르 비즈니스 로직
+│   ├── dto/                   # CreateGenreDto, UpdateGenreDto
+│   └── entities/              # Genre 엔티티
+│
+└── common/                    # 공통 모듈
+    ├── const/                 # 환경변수 키 상수
+    ├── decorator/             # @QueryRunner, @Throttle 데코레이터
+    ├── dto/                   # CursorPaginationDto 등 공통 DTO
+    ├── entity/                # BaseEntity (공통 필드)
+    ├── filter/                # QueryFailedExceptionFilter 등 예외 필터
+    ├── interceptor/           # TransactionInterceptor, ThrottleInterceptor, ResponseTimeInterceptor
+    ├── logger/                # Winston 로거 설정
+    └── tasks.service.ts       # 스케줄 태스크 서비스
 ```
 
-## Compile and run the project
+## API 엔드포인트
 
-```bash
-# development
-$ pnpm run start
+### Auth (인증)
+| Method | Endpoint | 설명 | 접근 권한 |
+|--------|----------|------|----------|
+| POST | `/auth/register` | 회원가입 | Public |
+| POST | `/auth/login` | 로그인 | Public |
+| POST | `/auth/token/access` | Access Token 재발급 | 인증 필요 |
+| POST | `/auth/token/block` | 토큰 블록 | 인증 필요 |
+| POST | `/auth/login/passport` | Passport 로그인 | Public |
+| GET | `/auth/private` | 인증 테스트 | 인증 필요 |
 
-# watch mode
-$ pnpm run start:dev
+### User (사용자)
+| Method | Endpoint | 설명 | 접근 권한 |
+|--------|----------|------|----------|
+| POST | `/user` | 사용자 생성 | 인증 필요 |
+| GET | `/user` | 전체 사용자 조회 | 인증 필요 |
+| GET | `/user/:id` | 특정 사용자 조회 | 인증 필요 |
+| PATCH | `/user/:id` | 사용자 정보 수정 | 인증 필요 |
+| DELETE | `/user/:id` | 사용자 삭제 | 인증 필요 |
 
-# production mode
-$ pnpm run start:prod
+### Movie (영화)
+| Method | Endpoint | 설명 | 접근 권한 |
+|--------|----------|------|----------|
+| GET | `/movie` | 영화 목록 조회 (페이지네이션) | Public |
+| GET | `/movie/recent` | 최근 영화 조회 (캐시 적용) | 인증 필요 |
+| GET | `/movie/:id` | 특정 영화 조회 | Public |
+| POST | `/movie` | 영화 생성 | Admin |
+| PATCH | `/movie/:id` | 영화 수정 | Admin |
+| DELETE | `/movie/:id` | 영화 삭제 | Admin |
+| POST | `/movie/:id/like` | 영화 좋아요 | 인증 필요 |
+| POST | `/movie/:id/dislike` | 영화 싫어요 | 인증 필요 |
+
+### Director (감독)
+| Method | Endpoint | 설명 | 접근 권한 |
+|--------|----------|------|----------|
+| POST | `/director` | 감독 생성 | 인증 필요 |
+| GET | `/director` | 전체 감독 조회 | 인증 필요 |
+| GET | `/director/:id` | 특정 감독 조회 | 인증 필요 |
+| PATCH | `/director/:id` | 감독 정보 수정 | 인증 필요 |
+| DELETE | `/director/:id` | 감독 삭제 | 인증 필요 |
+
+### Genre (장르)
+| Method | Endpoint | 설명 | 접근 권한 |
+|--------|----------|------|----------|
+| POST | `/genre` | 장르 생성 | 인증 필요 |
+| GET | `/genre` | 전체 장르 조회 | 인증 필요 |
+| GET | `/genre/:id` | 특정 장르 조회 | 인증 필요 |
+| PATCH | `/genre/:id` | 장르 정보 수정 | 인증 필요 |
+| DELETE | `/genre/:id` | 장르 삭제 | 인증 필요 |
+
+## 주요 기능
+
+### 🔐 인증 및 권한
+- **JWT 기반 인증**: Access Token / Refresh Token 방식
+- **RBAC (Role-Based Access Control)**: Admin, User 역할 기반 권한 관리
+- **Passport 통합**: Local Strategy, JWT Strategy
+
+### 🎬 영화 관리
+- 영화 CRUD 기능
+- 영화 상세 정보 (MovieDetail) 관리
+- 좋아요/싫어요 토글 기능 (MovieUserLike)
+- 정렬, 필터링, 커서 기반 페이지네이션
+
+### ⚡ 성능 최적화
+- **캐싱**: @nestjs/cache-manager를 활용한 응답 캐싱
+- **Throttling**: 요청 제한 (Rate Limiting)
+- **트랜잭션 인터셉터**: 데이터 무결성 보장
+
+### 📝 로깅
+- **Winston**: 콘솔 및 파일 로그 기록 (`logs/logs.log`)
+- **응답 시간 측정**: ResponseTimeInterceptor
+
+### 📄 API 문서
+- **Swagger UI**: `/doc` 경로에서 API 문서 확인 가능
+
+## 환경 변수
+
+프로젝트 실행을 위해 다음 환경 변수를 설정해야 합니다:
+
+```env
+ENV=dev                        # dev | prod
+DB_TYPE=postgres
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+DB_DATABASE=netflix
+HASH_ROUNDS=10
+ACCESS_TOKEN_SECRET=your_access_token_secret
+REFRESH_TOKEN_SECRET=your_refresh_token_secret
 ```
 
-## Run tests
+## 설치 및 실행
 
+### 의존성 설치
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+pnpm install
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+### 개발 모드 실행
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+pnpm run start:dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 프로덕션 빌드
+```bash
+pnpm run build
+pnpm run start:prod
+```
 
-## Resources
+### 테스트 실행
+```bash
+# 단위 테스트
+pnpm run test
 
-Check out a few resources that may come in handy when working with NestJS:
+# E2E 테스트
+pnpm run test:e2e
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+# 테스트 커버리지
+pnpm run test:cov
+```
 
-## Support
+## 정적 파일 서빙
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+`public/` 폴더의 파일들은 `/public/` 경로로 접근 가능합니다.
+- 예: `public/movie/example.mp4` → `http://localhost:3000/public/movie/example.mp4`
 
-## Stay in touch
+## 라이선스
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
-
----
-
-## 프로젝트 요약 ✅
-
-**기술 스택**: NestJS (v11), TypeScript, TypeORM, PostgreSQL, Passport (JWT / Local)
-
-**테스트 & 툴링**: Jest (unit/e2e), ESLint, Prettier
-
-**핵심 구조**:
-
-- `src/auth/`: 인증( `jwt.strategy.ts`, `local.strategy.ts` ), 미들웨어 및 RBAC(데코레이터 · 가드)
-- `src/user/`: 유저 엔티티 및 CRUD 로직 (`entities/user.entity.ts`)
-- `src/movie/`: 영화 도메인(컨트롤러 · 서비스 · 엔티티), `pipe/movie-title-validation.pipe.ts`
-- `src/director/`, `src/genre/`: 도메인별 컨트롤러/서비스/DTO/엔티티
-- `src/common/`: 공통 인터셉터/필터/서비스(트랜잭션, 캐시, 응답 시간 등)
-
-**실행 방법**:
-
-- 개발: `pnpm run start:dev`
-- 빌드: `pnpm run build`
-- 테스트: `pnpm run test` / e2e: `pnpm run test:e2e`
-
-**참고 파일 위치**:
-
-- 인증 흐름: `src/auth/`
-- 엔티티: 각 모듈의 `entities/` 또는 `entitie/` 폴더
-- e2e 테스트: `test/` (`app.e2e-spec.ts`)
+UNLICENSED
