@@ -7,12 +7,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['verbose'],
   });
-  app.enableVersioning({
-    // type: VersioningType.URI,
-    // type: VersioningType.HEADER,
-    type: VersioningType.MEDIA_TYPE,
-    key: 'v=',
-  });
   // app.setGlobalPrefix('v1');
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
   app.useGlobalPipes(
