@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, type LoggerService } from '@nestjs/common';
 import { Cron, SchedulerRegistry } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 // 디렉토리 안에 있는 모든 파일 목록을 읽어오는 모듈
@@ -8,6 +8,7 @@ import { Movie } from 'src/movie/entity/movie.emtity';
 import { Repository } from 'typeorm';
 import { Logger } from '@nestjs/common';
 import { DefaultLogger } from './logger/default.logger';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 @Injectable()
 export class TasksService {
@@ -18,23 +19,25 @@ export class TasksService {
     @InjectRepository(Movie)
     private readonly movieRepository: Repository<Movie>,
     private readonly schedulerRegistry: SchedulerRegistry,
-    private readonly logger: DefaultLogger,
+    // private readonly logger: DefaultLogger,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER)
+    private readonly logger: LoggerService,
   ) {}
 
   // @Cron('*/5 * * * * *')
   logEverySecond() {
     // 치명적인 에러가 발생해서 프로그램이 더이상 실행이 불가능한 경우
-    this.logger.fatal('FATAL 레벨 로그');
+    this.logger.fatal?.('FATAL 레벨 로그', null, TasksService.name);
     // 치명적인 에러가 발생해서 프로그램이 더이상 실행이 불가능한 경우
-    this.logger.error('ERROR 레벨 로그');
+    this.logger.error('ERROR 레벨 로그', null, TasksService.name);
     // 일어나면 안 되는 일이 맞는데 프로그램을 실행에 지장은 없는 경우
-    this.logger.warn('WARN 레벨 로그');
+    this.logger.warn('WARN 레벨 로그', TasksService.name);
     // 정보성 로그를 작성할 때
-    this.logger.log('LOG 레벨 로그');
+    this.logger.log('LOG 레벨 로그', TasksService.name);
     // 개발 환경에서 중요한거
-    this.logger.debug('DEBUG 레벨 로그');
+    this.logger.debug?.('DEBUG 레벨 로그', TasksService.name);
     // 궁금해서 로깅을 해본거
-    this.logger.verbose('VERBOSE 레벨 로그');
+    this.logger.verbose?.('VERBOSE 레벨 로그', TasksService.name);
   }
 
   // @Cron('* * * * * *')
