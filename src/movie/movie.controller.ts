@@ -57,7 +57,6 @@ export class MovieController {
   @Public()
   @Get()
   @Throttle({ count: 5, unit: 'minute' })
-  @Version('5')
   // @UseInterceptors(CacheInterceptor)
   getMovies(@Query() dto: GetMoviesDto, @UserId() userId?: number) {
     return this.movieService.findAll(dto, userId);

@@ -8,7 +8,9 @@ async function bootstrap() {
     logger: ['verbose'],
   });
   app.enableVersioning({
-    type: VersioningType.URI,
+    // type: VersioningType.URI,
+    type: VersioningType.HEADER,
+    header: 'version',
   });
   // app.setGlobalPrefix('v1');
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
