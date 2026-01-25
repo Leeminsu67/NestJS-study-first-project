@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
+import { Cron, SchedulerRegistry } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 // 디렉토리 안에 있는 모든 파일 목록을 읽어오는 모듈
 import { readdir, unlink } from 'fs/promises';
@@ -12,6 +12,7 @@ export class TasksService {
   constructor(
     @InjectRepository(Movie)
     private readonly movieRepository: Repository<Movie>,
+    private readonly schedulerRegistry: SchedulerRegistry,
   ) {}
 
   // @Cron('* * * * * *')
@@ -73,5 +74,31 @@ SET "dislikeCount" = (
 	WHERE m.id = mul."movieId" AND mul."isLike" = false
 )
       `);
+  }
+
+  // @Cron('* * * * * *', { name: 'printer' })
+  printer() {
+    console.log('print every seconds');
+  }
+
+  // @Cron('*/5 * * * * *')
+  stopper() {
+    console.log('----stopper run ----');
+
+    // 크론잡을 가져오는 방법
+    const job = this.schedulerRegistry.getCronJob('printer');
+
+    // console.log('# Last Date');
+    // console.log(job.lastDate());
+    // console.log('# Next Date');
+    // console.log(job.nextDate());
+    console.log('# Next Dates');
+    console.log(job.nextDates(5));
+
+    if (job.isActive) {
+      job.stop();
+    } else {
+      job.start();
+    }
   }
 }
