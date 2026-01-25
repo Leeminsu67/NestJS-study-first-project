@@ -12,21 +12,26 @@ import { AuthGuard } from '@nestjs/passport';
 import { LocalAuthGuard } from './strategy/local.strategy';
 import { JwtAuthGuard } from './strategy/jwt.strategy';
 import { Public } from './decorator/public.decorator';
+import { Authorization } from './decorator/authorization.decorator';
+import { ApiBasicAuth, ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('auth')
+@ApiBearerAuth()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Public()
+  @ApiBasicAuth()
   @Post('register')
   // autoorization: Basic $token
-  registerUser(@Headers('authorization') token: string) {
+  registerUser(@Authorization() token: string) {
     return this.authService.register(token);
   }
 
   @Public()
+  @ApiBasicAuth()
   @Post('login')
-  loginUser(@Headers('authorization') token: string) {
+  loginUser(@Authorization() token: string) {
     return this.authService.login(token);
   }
 

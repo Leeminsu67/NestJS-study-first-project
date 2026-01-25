@@ -13,10 +13,12 @@ import {
 import { GenreService } from './genre.service';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('genre')
 // class validator 적용하기 위함
 @UseInterceptors(ClassSerializerInterceptor)
+@ApiBearerAuth()
 export class GenreController {
   constructor(private readonly genreService: GenreService) {}
 
