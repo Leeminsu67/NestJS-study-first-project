@@ -8,6 +8,7 @@ import { join } from 'path';
 import { TasksService } from './tasks.service';
 import { Movie } from 'src/movie/entity/movie.emtity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { DefaultLogger } from './logger/default.logger';
 
 @Module({
   imports: [
@@ -33,7 +34,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     TypeOrmModule.forFeature([Movie]),
   ],
   controllers: [CommonController],
-  providers: [CommonService, TasksService],
+  providers: [CommonService, TasksService, DefaultLogger],
   exports: [CommonService],
 })
 export class CommonModule {}

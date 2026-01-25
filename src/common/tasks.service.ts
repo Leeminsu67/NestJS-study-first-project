@@ -6,19 +6,36 @@ import { readdir, unlink } from 'fs/promises';
 import { join, parse } from 'path';
 import { Movie } from 'src/movie/entity/movie.emtity';
 import { Repository } from 'typeorm';
+import { Logger } from '@nestjs/common';
+import { DefaultLogger } from './logger/default.logger';
 
 @Injectable()
 export class TasksService {
+  // Logger(여기 안에 어떤 클래스나 서비스인지 써준다)
+  // private readonly logger = new Logger(TasksService.name);
+
   constructor(
     @InjectRepository(Movie)
     private readonly movieRepository: Repository<Movie>,
     private readonly schedulerRegistry: SchedulerRegistry,
+    private readonly logger: DefaultLogger,
   ) {}
 
-  // @Cron('* * * * * *')
-  // logEveerySecond() {
-  //   console.log('1초마다 실행되는 작업입니다.');
-  // }
+  // @Cron('*/5 * * * * *')
+  logEverySecond() {
+    // 치명적인 에러가 발생해서 프로그램이 더이상 실행이 불가능한 경우
+    this.logger.fatal('FATAL 레벨 로그');
+    // 치명적인 에러가 발생해서 프로그램이 더이상 실행이 불가능한 경우
+    this.logger.error('ERROR 레벨 로그');
+    // 일어나면 안 되는 일이 맞는데 프로그램을 실행에 지장은 없는 경우
+    this.logger.warn('WARN 레벨 로그');
+    // 정보성 로그를 작성할 때
+    this.logger.log('LOG 레벨 로그');
+    // 개발 환경에서 중요한거
+    this.logger.debug('DEBUG 레벨 로그');
+    // 궁금해서 로깅을 해본거
+    this.logger.verbose('VERBOSE 레벨 로그');
+  }
 
   // @Cron('* * * * * *')
   async eraseOrphanFiles() {
@@ -41,7 +58,7 @@ export class TasksService {
         const now = +new Date();
 
         return now - date > aDayInMilSec;
-      } catch (e) {
+      } catch {
         return true;
       }
     });
