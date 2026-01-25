@@ -45,7 +45,7 @@ import { MovieUserLike } from './entity/movie-user-like.entity';
     //   }),
     // }),
   ],
-  controllers: [MovieController, MovieControllerV2],
+  controllers: [MovieControllerV2, MovieController],
   providers: [MovieService],
 })
 export class MovieModule {}
