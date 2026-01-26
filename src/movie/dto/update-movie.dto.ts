@@ -7,7 +7,7 @@ import {
   IsString,
 } from 'class-validator';
 import { CreateMovieDto } from './create-movie.dto';
-import { PartialType } from '@nestjs/mapped-types';
+import { PartialType } from '@nestjs/swagger';
 
 // PartialType이 CreateMovieDto에 있는 것을 다 옵셔널로 바꿔준다
 export class UpdateMovieDto extends PartialType(CreateMovieDto) {
