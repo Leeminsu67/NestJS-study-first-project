@@ -56,10 +56,4 @@ export class AuthController {
       accessToken: await this.authService.issueToken(req.user, false),
     };
   }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('private')
-  async private(@Request() req) {
-    return req.user;
-  }
 }
