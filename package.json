@@ -23,7 +23,9 @@
     "test:auth": "jest --testPathPatterns=src/auth --coverage --collectCoverageFrom=src/auth/**",
     "test:auth:watch": "jest --watch --testPathPatterns=src/auth --coverage --collectCoverageFrom=src/auth/**",
     "test:director": "jest --testPathPatterns=src/director --coverage --collectCoverageFrom=src/director/**",
-    "test:director:watch": "jest --watch --testPathPatterns=src/director --coverage --collectCoverageFrom=src/director/**"
+    "test:director:watch": "jest --watch --testPathPatterns=src/director --coverage --collectCoverageFrom=src/director/**",
+    "test:genre": "jest --testPathPatterns=src/genre --coverage --collectCoverageFrom=src/genre/**",
+    "test:genre:watch": "jest --watch --testPathPatterns=src/genre --coverage --collectCoverageFrom=src/genre/**"
   },
   "dependencies": {
     "@nestjs/cache-manager": "^3.1.0",
@@ -57,6 +59,8 @@
     "winston": "^3.19.0"
   },
   "devDependencies": {
+    "@automock/adapters.nestjs": "^2.1.0",
+    "@automock/jest": "^2.1.2",
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
     "@nestjs/cli": "^11.0.0",
