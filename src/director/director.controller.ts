@@ -32,20 +32,20 @@ export class DirectorController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: string) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.directorService.findOne(+id);
   }
 
   @Patch(':id')
   update(
-    @Param('id', ParseIntPipe) id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateDirectorDto: UpdateDirectorDto,
   ) {
     return this.directorService.update(+id, updateDirectorDto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: string) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.directorService.remove(+id);
   }
 }
