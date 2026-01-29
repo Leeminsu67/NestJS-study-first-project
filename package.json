@@ -21,7 +21,9 @@
     "test:user": "jest --testPathPatterns=src/user --coverage --collectCoverageFrom=src/user/**",
     "test:user:watch": "jest --watch --testPathPatterns=src/user --coverage --collectCoverageFrom=src/user/**",
     "test:auth": "jest --testPathPatterns=src/auth --coverage --collectCoverageFrom=src/auth/**",
-    "test:auth:watch": "jest --watch --testPathPatterns=src/auth --coverage --collectCoverageFrom=src/auth/**"
+    "test:auth:watch": "jest --watch --testPathPatterns=src/auth --coverage --collectCoverageFrom=src/auth/**",
+    "test:director": "jest --testPathPatterns=src/director --coverage --collectCoverageFrom=src/director/**",
+    "test:director:watch": "jest --watch --testPathPatterns=src/director --coverage --collectCoverageFrom=src/director/**"
   },
   "dependencies": {
     "@nestjs/cache-manager": "^3.1.0",
