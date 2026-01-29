@@ -29,7 +29,7 @@ describe('DirectorController', () => {
     directorService = module.get<DirectorService>(DirectorService);
   });
 
-  beforeEach(() => {
+  afterAll(() => {
     jest.clearAllMocks();
   });
 

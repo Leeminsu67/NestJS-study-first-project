@@ -78,7 +78,7 @@ describe('AuthService', () => {
     cacheManager = module.get<Cache>(CACHE_MANAGER);
   });
 
-  afterEach(() => {
+  afterAll(() => {
     jest.clearAllMocks();
   });
 

@@ -36,7 +36,7 @@ describe('DirectorService', () => {
     );
   });
 
-  beforeEach(() => {
+  afterAll(() => {
     jest.clearAllMocks();
   });
 
