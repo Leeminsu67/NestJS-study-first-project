@@ -399,7 +399,7 @@ export class MovieService {
       };
 
       // 영화 정보 업데이트
-      await this.updateMovie(qr, updateMovieDto, id);
+      await this.updateMovie(qr, movieUpdateFields, id);
 
       // await this.movieRepository.update({ id }, movieUpdateFields);
 
