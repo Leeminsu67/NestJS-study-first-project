@@ -19,7 +19,7 @@
     "test:cov": "jest --coverage",
     "test:cov:watch": "jest --watchAll --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:e2e": "jest --config ./jest-e2e.json",
     "test:user": "jest --testPathPatterns=src/user --coverage --collectCoverageFrom=src/user/**",
     "test:user:watch": "jest --watch --testPathPatterns=src/user --coverage --collectCoverageFrom=src/user/**",
     "test:auth": "jest --testPathPatterns=src/auth --coverage --collectCoverageFrom=src/auth/**",
@@ -57,7 +57,7 @@
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.28",
-    "uuid": "^13.0.0",
+    "uuid": "^9.0.1",
     "winston": "^3.19.0"
   },
   "devDependencies": {
