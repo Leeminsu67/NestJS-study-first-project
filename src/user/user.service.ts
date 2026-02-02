@@ -67,15 +67,31 @@ export class UserService {
     if (!user) {
       throw new NotFoundException(`존재하지 않는 ID 입니다:${id}`);
     }
-    const hash = await bcrypt.hash(
-      password,
-      this.configService.get<number>(envVariableKeys.hashRounds),
-    );
 
-    await this.userRepository.update(
-      { id },
-      { ...updateUserDto, password: hash },
-    );
+    // if (password) {
+    //   const hash = await bcrypt.hash(
+    //     password,
+    //     this.configService.get<number>(envVariableKeys.hashRounds)!,
+    //   );
+
+    //   await this.userRepository.update(
+    //     { id },
+    //     { ...updateUserDto, password: hash },
+    //   );
+    // }
+
+    // password가 있으면 hash 생성 후 업데이트, 없으면 그대로 업데이트
+    const updateData = password
+      ? {
+          ...updateUserDto,
+          password: await bcrypt.hash(
+            password,
+            this.configService.get<number>(envVariableKeys.hashRounds)!,
+          ),
+        }
+      : updateUserDto;
+
+    await this.userRepository.update({ id }, updateData);
 
     return await this.userRepository.findOne({ where: { id } });
   }
