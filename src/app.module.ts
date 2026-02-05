@@ -13,10 +13,10 @@ import { MovieDetail } from './movie/entity/movie-detail.entity';
 import { DirectorModule } from './director/director.module';
 import { Director } from './director/entitie/director.entity';
 import { GenreModule } from './genre/genre.module';
-import { Genre } from './genre/entities/genre.entity';
+import { Genre } from './genre/entity/genre.entity';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
-import { User } from './user/entities/user.entity';
+import { User } from './user/entity/user.entity';
 import { envVariableKeys } from './common/const/env.const';
 import { BearerTokenMiddleware } from './auth/middleware/bearer-token.middleware';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
@@ -32,7 +32,10 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { ThrottleInterceptor } from './common/interceptor/throttle.interceptor';
 import { ScheduleModule } from '@nestjs/schedule';
 import { WinstonModule } from 'nest-winston';
+import { ChatModule } from './chat/chat.module';
 import * as winston from 'winston';
+import { Chat } from './chat/entity/chat.entity';
+import { ChatRoom } from './chat/entity/chat-room.entity';
 
 @Module({
   imports: [
@@ -65,16 +68,25 @@ import * as winston from 'winston';
         username: configService.get<string>(envVariableKeys.dbUsername),
         password: configService.get<string>(envVariableKeys.dbPassword),
         database: configService.get<string>(envVariableKeys.dbDatabase),
-        entities: [Movie, MovieDetail, Director, Genre, User, MovieUserLike],
+        entities: [
+          Movie,
+          MovieDetail,
+          Director,
+          Genre,
+          User,
+          MovieUserLike,
+          Chat,
+          ChatRoom,
+        ],
         // 개발에서만 틀어놓고 실제 운영 환경에서는 끈다
         // synchronize: true,
         synchronize:
           configService.get<string>(envVariableKeys.env) === 'prod'
             ? false
             : true,
-        ...(configService.get<string>(envVariableKeys.env) === 'prod' && {
-          ssl: { rejectUnauthorized: false },
-        }),
+        // ...(configService.get<string>(envVariableKeys.env) === 'prod' && {
+        //   ssl: { rejectUnauthorized: false },
+        // }),
       }),
       inject: [ConfigService],
     }),
@@ -120,6 +132,7 @@ import * as winston from 'winston';
     GenreModule,
     AuthModule,
     UserModule,
+    ChatModule,
   ],
   providers: [
     // 가드

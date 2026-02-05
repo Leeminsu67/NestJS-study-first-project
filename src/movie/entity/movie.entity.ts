@@ -12,9 +12,9 @@ import {
 import { BaseTable } from '../../common/entity/base-table.entity';
 import { MovieDetail } from './movie-detail.entity';
 import { Director } from 'src/director/entitie/director.entity';
-import { Genre } from 'src/genre/entities/genre.entity';
+import { Genre } from 'src/genre/entity/genre.entity';
 import { Transform } from 'class-transformer';
-import { User } from 'src/user/entities/user.entity';
+import { User } from 'src/user/entity/user.entity';
 import { MovieUserLike } from './movie-user-like.entity';
 
 // ManyTo One Director 감독을 여러개의 영화를 만들 수 있음

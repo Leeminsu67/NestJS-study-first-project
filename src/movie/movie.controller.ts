@@ -17,7 +17,7 @@ import { UpdateMovieDto } from './dto/update-movie.dto';
 // import { MovieTitleValidationPipe } from './pipe/movie-title-validation.pipe';
 import { Public } from 'src/auth/decorator/public.decorator';
 import { RBAC } from 'src/auth/decorator/rbac.decorator';
-import { Role } from 'src/user/entities/user.entity';
+import { Role } from 'src/user/entity/user.entity';
 import { GetMoviesDto } from './dto/get-movies.dto';
 // import { CacheInterceptor } from 'src/common/interceptor/cache.interceptor';
 import { TransactionInterceptor } from 'src/common/interceptor/transaction.interceptor';
