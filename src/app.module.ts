@@ -8,7 +8,7 @@ import { MovieModule } from './movie/movie.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
-import { Movie } from './movie/entity/movie.emtity';
+import { Movie } from './movie/entity/movie.entity';
 import { MovieDetail } from './movie/entity/movie-detail.entity';
 import { DirectorModule } from './director/director.module';
 import { Director } from './director/entitie/director.entity';
@@ -51,6 +51,10 @@ import * as winston from 'winston';
         HASH_ROUNDS: Joi.number().required(),
         ACCESS_TOKEN_SECRET: Joi.string().required(),
         REFRESH_TOKEN_SECRET: Joi.string().required(),
+        AWS_SECRET_ACCESS_KEY: Joi.string().required(),
+        AWS_ACCESS_KEY_ID: Joi.string().required(),
+        AWS_REGION: Joi.string().required(),
+        BUCKET_NAME: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRootAsync({
@@ -63,8 +67,14 @@ import * as winston from 'winston';
         database: configService.get<string>(envVariableKeys.dbDatabase),
         entities: [Movie, MovieDetail, Director, Genre, User, MovieUserLike],
         // 개발에서만 틀어놓고 실제 운영 환경에서는 끈다
-        synchronize: true,
-        ssl: { rejectUnauthorized: false },
+        // synchronize: true,
+        synchronize:
+          configService.get<string>(envVariableKeys.env) === 'prod'
+            ? false
+            : true,
+        // ...(configService.get<string>(envVariableKeys.env) === 'prod' && {
+        //   ssl: { rejectUnauthorized: false },
+        // }),
       }),
       inject: [ConfigService],
     }),

@@ -56,7 +56,11 @@ export class Movie extends BaseTable {
 
   @Column()
   // 호스트까지 붙여서 줄 경우
-  @Transform(({ value }) => `http://localhost:3000/${value}`)
+  @Transform(({ value }) =>
+    process.env.ENV === 'prod'
+      ? `http://${process.env.BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${value}`
+      : `http://localhost:3000/${value}`,
+  )
   movieFilePath: string;
 
   @ManyToOne(() => Director, (director) => director.id, {

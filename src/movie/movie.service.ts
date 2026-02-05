@@ -21,6 +21,8 @@ import { rename } from 'fs/promises';
 import { User } from 'src/user/entities/user.entity';
 import { MovieUserLike } from './entity/movie-user-like.entity';
 import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
+import { ConfigService } from '@nestjs/config';
+import { envVariableKeys } from 'src/common/const/env.const';
 
 @Injectable()
 export class MovieService {
@@ -41,6 +43,7 @@ export class MovieService {
     private readonly dataSource: DataSource,
     private readonly commonService: CommonService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache, // nestjs cache manager인걸 확인
+    private readonly configService: ConfigService,
   ) {}
 
   // cache 적용 find 함수
@@ -216,10 +219,16 @@ export class MovieService {
     movieFolder: string,
     createMovieDto: CreateMovieDto,
   ) {
-    return rename(
-      join(process.cwd(), tempFolder, createMovieDto.movieFileName),
-      join(process.cwd(), movieFolder, createMovieDto.movieFileName),
-    );
+    if (this.configService.get<string>(envVariableKeys.env) !== 'prod') {
+      return rename(
+        join(process.cwd(), tempFolder, createMovieDto.movieFileName),
+        join(process.cwd(), movieFolder, createMovieDto.movieFileName),
+      );
+    } else {
+      return this.commonService.saveMovieToPermanentStorage(
+        createMovieDto.movieFileName,
+      );
+    }
   }
 
   async create(

@@ -6,6 +6,7 @@ import { Movie } from './entity/movie.entity';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { QueryRunner } from 'typeorm';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+import { ConfigService } from '@nestjs/config';
 
 describe('MovieController', () => {
   let movieController: MovieController;
