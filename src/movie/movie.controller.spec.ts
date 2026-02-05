@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MovieController } from './movie.controller';
 import { MovieService } from './movie.service';
 import { TestBed } from '@automock/jest';
-import { Movie } from './entity/movie.emtity';
+import { Movie } from './entity/movie.entity';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { QueryRunner } from 'typeorm';
 import { UpdateMovieDto } from './dto/update-movie.dto';

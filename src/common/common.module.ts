@@ -6,7 +6,7 @@ import { v4 } from 'uuid';
 import { diskStorage } from 'multer';
 import { join } from 'path';
 import { TasksService } from './tasks.service';
-import { Movie } from 'src/movie/entity/movie.emtity';
+import { Movie } from 'src/movie/entity/movie.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DefaultLogger } from './logger/default.logger';
 

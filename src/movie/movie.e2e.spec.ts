@@ -5,7 +5,7 @@ import { App } from 'supertest/types';
 import { AppModule } from 'src/app.module';
 import { Role, User } from 'src/user/entities/user.entity';
 import { Director } from 'src/director/entitie/director.entity';
-import { Movie } from './entity/movie.emtity';
+import { Movie } from './entity/movie.entity';
 import { Genre } from 'src/genre/entities/genre.entity';
 import { DataSource } from 'typeorm';
 import { MovieDetail } from './entity/movie-detail.entity';

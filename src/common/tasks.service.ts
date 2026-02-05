@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 // 디렉토리 안에 있는 모든 파일 목록을 읽어오는 모듈
 import { readdir, unlink } from 'fs/promises';
 import { join, parse } from 'path';
-import { Movie } from 'src/movie/entity/movie.emtity';
+import { Movie } from 'src/movie/entity/movie.entity';
 import { Repository } from 'typeorm';
 import { Logger } from '@nestjs/common';
 import { DefaultLogger } from './logger/default.logger';

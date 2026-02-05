@@ -1,7 +1,7 @@
 import { Exclude } from 'class-transformer';
 import { BaseTable } from 'src/common/entity/base-table.entity';
 import { MovieUserLike } from 'src/movie/entity/movie-user-like.entity';
-import { Movie } from 'src/movie/entity/movie.emtity';
+import { Movie } from 'src/movie/entity/movie.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum Role {
