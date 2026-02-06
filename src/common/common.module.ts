@@ -9,6 +9,7 @@ import { TasksService } from './tasks.service';
 import { Movie } from 'src/movie/entity/movie.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DefaultLogger } from './logger/default.logger';
+import { BullModule } from '@nestjs/bullmq';
 
 @Module({
   imports: [
@@ -32,6 +33,19 @@ import { DefaultLogger } from './logger/default.logger';
       }),
     }),
     TypeOrmModule.forFeature([Movie]),
+    // Queue 세팅
+    BullModule.forRoot({
+      connection: {
+        host: 'redis-13224.c340.ap-northeast-2-1.ec2.cloud.redislabs.com',
+        port: 13224,
+        username: 'default',
+        password: 'wpyft8lHWRq2fyR4VT1VbbtAGJE3jnoA',
+      },
+    }),
+    // Queue 작업 이름 세팅
+    BullModule.registerQueue({
+      name: 'thumbnail-generation',
+    }),
   ],
   controllers: [CommonController],
   providers: [CommonService, TasksService, DefaultLogger],
